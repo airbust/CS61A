@@ -1,0 +1,7 @@
+'gcd-correct', (0, 70)
+'hailstone-correct', (512, 70)
+'is_palindrome-correct', (1024, 70)
+'skip_mul-correct', (1536, 70)
+'is_prime-correct', (2048, 70)
+'interleaved_sum-correct', (2560, 70)
+'ten_pairs-correct', (3072, 70)

@@ -1,0 +1,5 @@
+'repeated-correct', (0, 70)
+'sum_digits-correct', (512, 70)
+'double_eights-correct', (1024, 70)
+'both_positive-correct', (1536, 70)
+'falling-correct', (2048, 70)
