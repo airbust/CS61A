@@ -11,7 +11,11 @@ def link_to_list(link):
     []
     """
     "*** YOUR CODE HERE ***"
-
+    lst = []
+    while link is not Link.empty:
+        lst.append(link.first)
+        link = link.rest
+    return lst
 # Q4
 def store_digits(n):
     """Stores the digits of a positive number n in a linked list.
@@ -25,7 +29,12 @@ def store_digits(n):
     Link(8, Link(7, Link(6)))
     """
     "*** YOUR CODE HERE ***"
-
+    link = Link(n % 10)
+    n = n // 10
+    while n != 0:
+        link = Link(n % 10, link)
+        n = n // 10
+    return link
 # Q5
 def cumulative_sum(t):
     """Mutates t where each node's root becomes the sum of all entries in the
@@ -37,7 +46,10 @@ def cumulative_sum(t):
     Tree(16, [Tree(8, [Tree(5)]), Tree(7)])
     """
     "*** YOUR CODE HERE ***"
-
+    for branch in t.branches:
+        cumulative_sum(branch)
+        if branch.is_leaf:
+            t.label += branch.label
 # Linked List Class
 class Link:
     """A linked list.
@@ -112,7 +124,7 @@ class Tree:
     def __eq__(self, other):
         return type(other) is type(self) and self.label == other.label \
                and self.branches == other.branches
-    
+
     def __str__(self):
         def print_tree(t, indent=0):
             tree_str = '  ' * indent + str(t.label) + "\n"
