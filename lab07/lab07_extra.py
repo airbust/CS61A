@@ -18,7 +18,12 @@ def remove_all(link , value):
     <0 1>
     """
     "*** YOUR CODE HERE ***"
-
+    while link.rest is not Link.empty:
+        while link.rest is not Link.empty and link.second == value:
+            link.rest = link.rest.rest
+        link = link.rest
+        if link is Link.empty:
+            break
 # Q7
 def deep_map_mut(fn, link):
     """Mutates a deep link by replacing each item found with the
@@ -33,7 +38,12 @@ def deep_map_mut(fn, link):
     <9 <16> 25 36>
     """
     "*** YOUR CODE HERE ***"
-
+    while link is not Link.empty:
+        if not isinstance(link.first, Link):
+            link.first = fn(link.first)
+        else:
+            deep_map_mut(fn, link.first)
+        link = link.rest
 # Q8
 def has_cycle(link):
     """Return whether link contains a cycle.
@@ -50,6 +60,12 @@ def has_cycle(link):
     False
     """
     "*** YOUR CODE HERE ***"
+    lnk = link
+    while link.rest is not lnk:
+        link = link.rest
+        if link is Link.empty:
+            return False
+    return True
 
 def has_cycle_constant(link):
     """Return whether link contains a cycle.
@@ -63,7 +79,12 @@ def has_cycle_constant(link):
     False
     """
     "*** YOUR CODE HERE ***"
-
+    lnk = link
+    while link.rest is not lnk:
+        link = link.rest
+        if link is Link.empty:
+            return False
+    return True
 # Q9
 def reverse_other(t):
     """Mutates the tree such that nodes on every other (even_indexed) level
@@ -79,3 +100,16 @@ def reverse_other(t):
     Tree(1, [Tree(8, [Tree(3, [Tree(5), Tree(4)]), Tree(6, [Tree(7)])]), Tree(2)])
     """
     "*** YOUR CODE HERE ***"
+    for branch in t.branches:
+        for br in branch.branches:
+           reverse_other(br)
+    t1 = [branch.label for branch in t.branches]
+    t1.reverse()
+    for i in range(len(t1)):
+        t.branches[i].label = t1[i]
+""" wrong code:
+    t1 = list(t.branches)
+    t1.reverse()
+    for i in range(len(t1)):
+        t.branches[i].label = t1[i].label
+"""

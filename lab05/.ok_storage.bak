@@ -7,3 +7,4 @@
 'construct_sent-correct', (3072, 70)
 'prune_leaves-correct', (3584, 70)
 'sprout_leaves-correct', (4096, 70)
+'add_trees-correct', (4608, 70)

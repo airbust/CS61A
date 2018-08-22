@@ -179,3 +179,19 @@ def add_trees(t1, t2):
       5
     """
     "*** YOUR CODE HERE ***"
+    bran = []
+    for branch1, branch2 in zip(branches(t1), branches(t2)):
+        bran.append(add_trees(branch1, branch2))
+    l1 = len(branches(t1))
+    l2 = len(branches(t2))
+    if l1 < l2:
+        i = l1
+        while i < l2:
+            bran.append(branches(t2)[i])
+            i += 1
+    else:
+        i = l2
+        while i < l1:
+            bran.append(branches(t1)[i])
+            i += 1
+    return tree(label(t1) + label(t2), bran)
