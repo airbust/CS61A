@@ -7,29 +7,26 @@ test = {
         {
           'code': r"""
           scm> (over-or-under 5 5)
-          3e92404229d40b73cf8dd05dcfa23ea9
-          # locked
+          0
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
           scm> (over-or-under 5 4)
-          d912fc844d1dbaeea8a84b3ec8b315bc
-          # locked
+          1
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
           scm> (over-or-under 3 5)
-          2a6276d00f3261a89d6feb11e219e42e
-          # locked
+          -1
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         }
       ],
       'scored': True,
