@@ -1,0 +1,3 @@
+'compose-all-correct', (0, 70)
+'tail replicate-correct', (512, 70)
+'permutations-correct', (1024, 70)

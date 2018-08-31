@@ -238,16 +238,15 @@ def long_paths(tree, n):
     [Link(0, Link(11, Link(12, Link(13, Link(14)))))]
     """
     "*** YOUR CODE HERE ***"
-    path = []
-    def helper(t, lnk, path):
-        if t.is_leaf:
-            lnk.rest = Link(t.label)
-            path.append(lnk)
-        for branch in t.branches:
-            helper(branch, lnk, path)
-            lnk = lnk.rest
-    helper(tree, lnk, path)
-    return path
+    paths = []
+    if n <= 0 and tree.is_leaf():
+        paths.append(Link(tree.label))
+    for branch in tree.branches:
+        for path in long_paths(branch, n-1):
+            paths.append(Link(tree.label, path))
+    return paths
+# tree.is_leaf != tree.is_leaf()
+
 # Orders of Growth
 def zap(n):
     i, count = 1, 0

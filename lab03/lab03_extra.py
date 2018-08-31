@@ -31,6 +31,21 @@ def cycle(f1, f2, f3):
     19
     """
     "*** YOUR CODE HERE ***"
+    def func(n):
+        def fun(x):
+            te = x
+            m = 1
+            while m <= n:
+                if m % 3 == 1:
+                    te = f1(te)
+                elif m % 3 == 2:
+                    te = f2(te)
+                else:
+                    te = f3(te)
+                m += 1
+            return te
+        return fun
+    return func
 
 ## Lambda expressions
 

@@ -20,3 +20,9 @@ def permutations(lst):
         yield []
         return
     "*** YOUR CODE HERE ***"
+    if len(lst) == 1:
+        yield lst
+    else:
+        for perm in permutations([x for x in lst if x != lst[0]]):
+            for k in range(len(perm) + 1):
+                yield perm[:k] + [lst[0]] + perm[k:]

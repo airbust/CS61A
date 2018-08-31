@@ -79,12 +79,14 @@ def has_cycle_constant(link):
     False
     """
     "*** YOUR CODE HERE ***"
-    lnk = link
-    while link.rest is not lnk:
-        link = link.rest
-        if link is Link.empty:
-            return False
-    return True
+    fast = slow = link
+    while fast.rest is not Link.empty and fast.rest.rest is not Link.empty:
+        slow = slow.rest
+        fast = fast.rest.rest
+        if fast == slow:
+            return True
+    return False
+
 # Q9
 def reverse_other(t):
     """Mutates the tree such that nodes on every other (even_indexed) level
