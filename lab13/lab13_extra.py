@@ -40,3 +40,13 @@ def make_generators_generator(g):
     5
     """
     "*** YOUR CODE HERE ***"
+    def sub_gen(i):
+        for e in g():
+            if i <= 0:
+                return
+            yield e
+            i -= 1
+    i = 1
+    for _ in g():
+        yield sub_gen(i)
+        i += 1
