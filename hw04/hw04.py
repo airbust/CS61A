@@ -171,8 +171,8 @@ def count_change(amount):
             i *= 2
         return i // 2
     def count_partitions(amount, maxc):
-        if maxc == 1:
-            return 1
+        if maxc == 0:
+            return 0
         elif amount < 0:
             return 0
         elif amount == 0:
