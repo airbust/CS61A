@@ -5,7 +5,7 @@ test = {
     {
       'cases': [
         {
-          'answer': 'bbd938c5f56c98446e918d28e3cce2e7',
+          'answer': '[5, -1]',
           'choices': [
             '[-1, 1]',
             '[5, -1]',
@@ -13,14 +13,14 @@ test = {
             '[-1, -10]'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': r"""
           If centroids is [[-1, 1], [5, -1], [1, 10], [-1, -10]],
           to which centroid will [6, 0] be associated?
           """
         },
         {
-          'answer': 'b0b20e80299d918dd96ccea1b84f605c',
+          'answer': '[1, 1]',
           'choices': [
             '[-1, 1]',
             '[1, 1]',
@@ -28,7 +28,7 @@ test = {
             '[1, -1]'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': r"""
           If centroids is [[1, 1], [1, -1], [-1, 1], [-1, -1]],
           to which centroid will [0, 0] be associated?
