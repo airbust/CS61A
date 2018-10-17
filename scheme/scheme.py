@@ -57,7 +57,7 @@ def eval_all(expressions, env):
     environment ENV and return the value of the last."""
     # BEGIN PROBLEM 8
     if expressions == nil:
-        return None
+        return
     first = scheme_eval(expressions.first, env)
     if expressions.second == nil:
         return first
@@ -117,7 +117,7 @@ class Frame:
         if len(formals) != len(vals):
             raise SchemeError
         while formals != nil:
-            child.bindings[formals.first] = vals.first
+            child.define(formals.first, vals.first)
             formals, vals = formals.second, vals.second
         # END PROBLEM 11
         return child
@@ -290,11 +290,11 @@ def do_or_form(expressions, env):
     "*** YOUR CODE HERE ***"
     if expressions == nil:
         return False
-    while expressions.second != nil:
+    while expressions != nil:
         if scheme_truep(scheme_eval(expressions.first, env)):
             return scheme_eval(expressions.first, env)
         expressions = expressions.second
-    return scheme_eval(expressions.first, env)
+    return False
     # END PROBLEM 13
 
 def do_cond_form(expressions, env):
