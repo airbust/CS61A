@@ -32,10 +32,14 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
     else:
         # BEGIN PROBLEM 5
         "*** YOUR CODE HERE ***"
-        first = scheme_eval(first, env)
-        check_procedure(first)
-        rest = rest.map(lambda x: scheme_eval(x, env))
-        return scheme_apply(first, rest, env)
+        procedure = scheme_eval(first, env)
+        check_procedure(procedure)
+        if isinstance(procedure, MacroProcedure):
+            result = procedure.apply_macro(rest, env)
+            return scheme_eval(result, env)
+        else:
+            args = rest.map(lambda x: scheme_eval(x, env))
+            return scheme_apply(procedure, args, env)
         # END PROBLEM 5
 
 def self_evaluating(expr):
@@ -56,13 +60,21 @@ def eval_all(expressions, env):
     """Evaluate each expression im the Scheme list EXPRESSIONS in
     environment ENV and return the value of the last."""
     # BEGIN PROBLEM 8
-    if expressions == nil:
-        return
-    first = scheme_eval(expressions.first, env)
-    if expressions.second == nil:
-        return first
-    return eval_all(expressions.second, env)
+#    if expressions == nil:
+#        return None
+#    first = scheme_eval(expressions.first, env)
+#    if expressions.second == nil:
+#        return first
+#    return eval_all(expressions.second, env)
     # END PROBLEM 8
+
+    # tail-recursion optimization
+    if expressions == nil:
+        return None
+    if expressions.second == nil:
+        return scheme_eval(expressions.first, env, True)
+    scheme_eval(expressions.first, env)
+    return eval_all(expressions.second, env)
 
 ################
 # Environments #
@@ -115,7 +127,7 @@ class Frame:
         # BEGIN PROBLEM 11
         "*** YOUR CODE HERE ***"
         if len(formals) != len(vals):
-            raise SchemeError
+            raise SchemeError('length of formals ({0}) does not match length of values ({1})'.format(len(formals), len(vals)))
         while formals != nil:
             child.define(formals.first, vals.first)
             formals, vals = formals.second, vals.second
@@ -166,7 +178,7 @@ class PrimitiveProcedure(Procedure):
         try:
             return self.fn(*python_args)
         except TypeError:
-            raise SchemeError
+            raise SchemeError('incorrect number of arguments passed into function')
         # END PROBLEM 4
 
 class LambdaProcedure(Procedure):
@@ -269,33 +281,46 @@ def do_if_form(expressions, env):
     if scheme_truep(scheme_eval(expressions.first, env)):
         return scheme_eval(expressions.second.first, env)
     elif len(expressions) == 3:
-        return scheme_eval(expressions.second.second.first, env)
+        # tail-recursion optimization
+        return scheme_eval(expressions.second.second.first, env, True)
 
 def do_and_form(expressions, env):
     """Evaluate a (short-circuited) and form."""
     # BEGIN PROBLEM 13
-    "*** YOUR CODE HERE ***"
+#    "*** YOUR CODE HERE ***"
+#    if expressions == nil:
+#        return True
+#    while expressions.second != nil:
+#        if scheme_falsep(scheme_eval(expressions.first, env)):
+#            return False
+#        expressions = expressions.second
+#    return scheme_eval(expressions.first, env)
+    # END PROBLEM 13
+
+    # tail-recursion optimization
     if expressions == nil:
         return True
-    while expressions.second != nil:
-        if scheme_falsep(scheme_eval(expressions.first, env)):
-            return False
-        expressions = expressions.second
-    return scheme_eval(expressions.first, env)
-    # END PROBLEM 13
+    computed = scheme_eval(expressions.first, env, expressions.second == nil)
+    return computed if expressions.second == nil or scheme_falsep(computed) else do_and_form(expressions.second, env)
 
 def do_or_form(expressions, env):
     """Evaluate a (short-circuited) or form."""
     # BEGIN PROBLEM 13
-    "*** YOUR CODE HERE ***"
+#    "*** YOUR CODE HERE ***"
+#    if expressions == nil:
+#        return False
+#    while expressions != nil:
+#        if scheme_truep(scheme_eval(expressions.first, env)):
+#            return scheme_eval(expressions.first, env)
+#        expressions = expressions.second
+#    return False
+    # END PROBLEM 13
+
+    # tail-recursion optimization
     if expressions == nil:
         return False
-    while expressions != nil:
-        if scheme_truep(scheme_eval(expressions.first, env)):
-            return scheme_eval(expressions.first, env)
-        expressions = expressions.second
-    return False
-    # END PROBLEM 13
+    computed = scheme_eval(expressions.first, env, expressions.second == nil)
+    return computed if scheme_truep(computed) else do_or_form(expressions.second, env)
 
 def do_cond_form(expressions, env):
     """Evaluate a cond form."""
@@ -346,6 +371,15 @@ def do_define_macro(expressions, env):
     """Evaluate a define-macro form."""
     # BEGIN Problem 21
     "*** YOUR CODE HERE ***"
+    check_form(expressions, 2)
+    target = expressions.first
+    if isinstance(target, Pair):
+        name, formals, body = target.first, target.second, expressions.second
+        if scheme_symbolp(name):
+            check_formals(formals)
+            env.define(name, MacroProcedure(formals, body, env))
+            return name
+    raise SchemeError("invalid macro definition")
     # END Problem 21
 
 
@@ -515,13 +549,16 @@ def optimize_tail_calls(original_scheme_eval):
             result = Thunk(expr, env)
         # BEGIN
         "*** YOUR CODE HERE ***"
+        while isinstance(result, Thunk):
+            result = original_scheme_eval(result.expr, result.env)
+        return result
         # END
     return optimized_eval
 
 ################################################################
 # Uncomment the following line to apply tail call optimization #
 ################################################################
-# scheme_eval = optimize_tail_calls(scheme_eval)
+scheme_eval = optimize_tail_calls(scheme_eval)
 
 
 ####################
